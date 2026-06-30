@@ -1,3 +1,10 @@
+cm5-programming-jig-gpio-config (1.0.1) unstable; urgency=medium
+
+  * Add Apache-2.0 LICENSE file and DEP-5 debian/copyright.
+  * packaging: Ship LICENSE in /usr/share/doc/cm5-programming-jig-gpio-config.
+
+ -- Tom Dewey <tom.dewey@raspberrypi.com>  Mon, 30 Jun 2026 17:00:00 +0100
+
 cm5-programming-jig-gpio-config (1.0) unstable; urgency=medium
 
   * CM5 programming jig GPIO configuration for Raspberry Pi PVT hardware.
