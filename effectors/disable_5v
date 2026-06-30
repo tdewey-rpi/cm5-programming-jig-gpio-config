@@ -1,0 +1,10 @@
+#!/bin/sh
+
+set -e
+
+gpioset -t 0 -c gpiochip0 16=0
+
+# Return to solid green "ready" once the CM5 is removed
+/usr/bin/provisioning_ready
+
+exit 0

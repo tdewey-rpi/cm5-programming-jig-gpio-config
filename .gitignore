@@ -1,0 +1,15 @@
+src/build
+/dist
+__pycache__
+*.egg-info
+obj-aarch64-linux-gnu/
+
+debian/.debhelper
+debian/cm5-programming-jig-gpio-config
+debian/cm5-programming-jig-gpio-config.1
+debian/cm5-programming-jig-gpio-config.debhelper.log
+debian/cm5-programming-jig-gpio-config.postrm.debhelper
+debian/debhelper-build-stamp
+debian/files
+debian/*.substvars
+

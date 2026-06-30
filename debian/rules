@@ -1,0 +1,25 @@
+#!/usr/bin/make -f
+
+export DH_VERBOSE = 1
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+
+%:
+	pandoc README.md -f markdown -s -t man --output debian/cm5-programming-jig-gpio-config.1
+	dh $@
+
+override_dh_auto_configure:
+	dh_auto_configure --sourcedirectory=src
+
+override_dh_auto_build:
+	dh_auto_build --sourcedirectory=src
+
+override_dh_auto_install:
+	dh_auto_install --destdir=debian/cm5-programming-jig-gpio-config --sourcedirectory=src
+
+override_dh_auto_clean:
+	dh_auto_clean --sourcedirectory=src
+	dh_auto_clean
+
+override_dh_installsystemd:
+	dh_installsystemd --name=cm5-provisioner-led --no-start
+	dh_installsystemd --name=cm5-provisioner-led-ready --no-start

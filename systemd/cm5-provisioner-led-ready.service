@@ -1,0 +1,14 @@
+[Unit]
+Description=CM5 programming jig ready LED indicator
+Documentation=man:cm5-programming-jig-gpio-config(1)
+After=rpi-provisioner-ui.service cm5-provisioner-led.service
+Wants=rpi-provisioner-ui.service cm5-provisioner-led.service
+ConditionPathExists=/usr/bin/rpi-sb-bootstrap.sh
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=-/usr/bin/provisioning_ready
+
+[Install]
+WantedBy=multi-user.target

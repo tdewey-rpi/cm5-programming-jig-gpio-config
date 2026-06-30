@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# Red blink: provisioning failed (state 5).
+
+set -e
+
+/usr/bin/cm5_led_blink red start
+
+exit 0

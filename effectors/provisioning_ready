@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# Solid green: fixture ready for the next CM5 (state 2).
+
+set -e
+
+/usr/bin/cm5_led_blink stop-all
+/usr/bin/cm5_led_blink hold 9=0 10=1 11=0
+
+exit 0

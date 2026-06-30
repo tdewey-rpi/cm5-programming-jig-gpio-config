@@ -1,0 +1,29 @@
+triggers/24                                     etc/gpio
+
+effectors/provisioning_complete                 usr/bin
+effectors/provisioning_active                   usr/bin
+effectors/provisioning_ready                    usr/bin
+effectors/provisioning_failed                   usr/bin
+effectors/enable_rpiboot                        usr/bin
+effectors/disable_rpiboot                       usr/bin
+effectors/enable_5v                             usr/bin
+effectors/disable_5v                            usr/bin
+
+systemd/cm5-provisioner-led.service             lib/systemd/system
+systemd/cm5-provisioner-led-ready.service       lib/systemd/system
+
+hooks/sb-provisioner-bootstrap.sh               etc/rpi-sb-provisioner/scripts
+hooks/sb-provisioner-provision-started.sh       etc/rpi-sb-provisioner/scripts
+hooks/sb-provisioner-post-flash.sh              etc/rpi-sb-provisioner/scripts
+hooks/sb-provisioner-provision-failed.sh        etc/rpi-sb-provisioner/scripts
+hooks/fde-provisioner-bootstrap.sh              etc/rpi-sb-provisioner/scripts
+hooks/fde-provisioner-provision-started.sh      etc/rpi-sb-provisioner/scripts
+hooks/fde-provisioner-post-flash.sh             etc/rpi-sb-provisioner/scripts
+hooks/fde-provisioner-provision-failed.sh       etc/rpi-sb-provisioner/scripts
+hooks/naked-provisioner-bootstrap.sh            etc/rpi-sb-provisioner/scripts
+hooks/naked-provisioner-provision-started.sh    etc/rpi-sb-provisioner/scripts
+hooks/naked-provisioner-post-flash.sh           etc/rpi-sb-provisioner/scripts
+hooks/naked-provisioner-provision-failed.sh     etc/rpi-sb-provisioner/scripts
+hooks/idp-provisioner-provision-started.sh      etc/rpi-sb-provisioner/scripts
+hooks/idp-provisioner-post-flash.sh             etc/rpi-sb-provisioner/scripts
+hooks/idp-provisioner-provision-failed.sh       etc/rpi-sb-provisioner/scripts

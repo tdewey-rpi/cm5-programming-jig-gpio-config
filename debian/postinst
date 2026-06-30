@@ -1,0 +1,40 @@
+#!/bin/sh
+set +e
+
+case "$1" in
+    configure)
+        if [ -d /run/systemd/system ] && [ -x /bin/systemctl ]; then
+            systemctl daemon-reload || true
+
+            if systemctl cat cm5-provisioner-led.service >/dev/null 2>&1; then
+                systemctl enable cm5-provisioner-led.service >/dev/null 2>&1 || true
+                systemctl start cm5-provisioner-led.service >/dev/null 2>&1 || true
+            fi
+
+            if systemctl cat gpio@.service >/dev/null 2>&1; then
+                systemctl enable gpio@24.service >/dev/null 2>&1 || true
+                systemctl start gpio@24.service >/dev/null 2>&1 || true
+            else
+                echo "gpio@.service template not found; skipping gpio@24 activation." >&2
+                echo "Install rpi-systemd-gpio and then run: systemctl enable --now gpio@24.service" >&2
+            fi
+
+            if systemctl cat cm5-provisioner-led-ready.service >/dev/null 2>&1; then
+                systemctl enable cm5-provisioner-led-ready.service >/dev/null 2>&1 || true
+                systemctl start cm5-provisioner-led-ready.service >/dev/null 2>&1 || true
+            fi
+        fi
+    ;;
+
+    abort-upgrade|abort-remove|abort-deconfigure)
+    ;;
+
+    *)
+        echo "postinst called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac
+
+##DEBHELPER##
+
+exit 0

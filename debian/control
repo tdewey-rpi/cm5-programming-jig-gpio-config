@@ -1,0 +1,25 @@
+Source: cm5-programming-jig-gpio-config
+Section: devel
+Priority: optional
+Maintainer: Tom Dewey <tom.dewey@raspberrypi.com>
+Build-Depends: debhelper-compat (= 13),
+               pandoc,
+               cmake,
+               pkg-config,
+               libgpiod-dev (>= 2.0),
+               g++,
+Standards-Version: 4.7.2
+Homepage: https://www.raspberrypi.com/software
+
+Package: cm5-programming-jig-gpio-config
+Architecture: arm64
+Pre-Depends: dpkg (>= 1.16.1), ${misc:Pre-Depends}
+Depends: ${misc:Depends},
+         ${shlibs:Depends},
+         systemd,
+         rpi-systemd-gpio (>= 1.1.1),
+         rpi-sb-provisioner (>= 2.3.1),
+         gpiod (>= 2.0),
+         libgpiod3 (>= 2.0)
+Description: CM5 Programming Jig GPIO Configuration
+ This package contains GPIO, LED, and hook configuration for the CM5 programming jig.

@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# Blue blink: bootstrap detected the DUT through flash complete (state 3).
+
+set -e
+
+/usr/bin/cm5_led_blink blue start
+
+exit 0

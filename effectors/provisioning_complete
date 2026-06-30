@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# Solid green: flash succeeded, waiting for CM5 removal (state 4).
+
+set -e
+
+/usr/bin/provisioning_ready
+
+exit 0

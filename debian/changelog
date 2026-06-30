@@ -1,0 +1,19 @@
+cm5-programming-jig-gpio-config (1.0) unstable; urgency=medium
+
+  * CM5 programming jig GPIO configuration for Raspberry Pi PVT hardware.
+  * effectors: Power (GPIO 16), RPIBOOT (GPIO 17), and lever triggers (GPIO 24)
+    via rpi-systemd-gpio; status LEDs on GPIO 9 (blue), 10 (green), 11 (red)
+    with all three lines driven together in every state.
+  * daemon: cm5-provisioner-led C++20 service on libgpiod with cm5_led_blink
+    IPC client; LED state survives provisioner service cgroup lifecycle.
+  * hooks: sb-, fde-, naked-, and idp-provisioner integration for bootstrap,
+    provision-started, post-flash, and provision-failed customisation stages.
+  * LED behaviour: solid green when ready; blue blink (2 Hz) from bootstrap
+    USB detect through flash complete; solid green on success; red blink (2 Hz)
+    on provisioning-phase failure only (expected DUT reboot/USB re-enumeration
+    during bootstrap does not signal failure).
+  * systemd: cm5-provisioner-led.service and cm5-provisioner-led-ready.service.
+  * packaging: Requires rpi-sb-provisioner (>= 2.3.1), rpi-systemd-gpio,
+    libgpiod3, and gpiod.
+
+ -- Tom Dewey <tom.dewey@raspberrypi.com>  Tue, 30 Jun 2026 16:00:00 +0100
