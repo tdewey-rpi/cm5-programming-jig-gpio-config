@@ -1,3 +1,17 @@
+cm5-programming-jig-gpio-config (1.0.2) unstable; urgency=medium
+
+  * postinst: Enable gpio@24.service with deb-systemd-helper instead of
+    `systemctl enable`. The previous call sat inside the
+    `[ -d /run/systemd/system ]` guard, so it was skipped when the package was
+    configured in an offline build chroot (e.g. rpi-image-gen). The wants
+    symlink was therefore never baked into the image and gpio@24 never started
+    on first boot, even though GPIO24 itself worked. deb-systemd-helper bakes
+    enablement in offline, matching how the LED units are enabled.
+  * postrm: Disable/purge gpio@24.service enablement on remove/purge so no
+    dangling wants symlink or helper state is left behind.
+
+ -- Tom Dewey <tom.dewey@raspberrypi.com>  Tue, 21 Jul 2026 16:35:00 +0100
+
 cm5-programming-jig-gpio-config (1.0.1) unstable; urgency=medium
 
   * Add Apache-2.0 LICENSE file and DEP-5 debian/copyright.

@@ -1,0 +1,19 @@
+#!/bin/sh
+set -e
+
+# Mirror the enablement we perform for the gpio@24 template instance in
+# postinst. dh_installsystemd only cleans up the LED units it manages (via the
+# ##DEBHELPER## expansion below), so we disable/purge gpio@24 ourselves to avoid
+# leaving a dangling wants symlink and deb-systemd-helper state behind.
+if [ -x /usr/bin/deb-systemd-helper ]; then
+    if [ "$1" = "remove" ]; then
+        deb-systemd-helper disable gpio@24.service >/dev/null || true
+    fi
+    if [ "$1" = "purge" ]; then
+        deb-systemd-helper purge gpio@24.service >/dev/null || true
+    fi
+fi
+
+##DEBHELPER##
+
+exit 0

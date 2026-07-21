@@ -3,6 +3,23 @@ set +e
 
 case "$1" in
     configure)
+        # Enable the gpio@24 trigger instance in an offline-safe way.
+        #
+        # gpio@24 is a template instance of gpio@.service, which is shipped by
+        # our hard dependency rpi-systemd-gpio (so the template is present on
+        # disk by the time this runs). dh_installsystemd cannot manage a template
+        # instance, so we enable it ourselves -- but via deb-systemd-helper, NOT
+        # `systemctl enable`. This package is also configured in an offline build
+        # chroot (e.g. rpi-image-gen) where systemd is not running: there,
+        # `systemctl enable` silently no-ops, so the wants symlink is never baked
+        # into the image and a freshly flashed unit never starts gpio@24 on first
+        # boot. deb-systemd-helper manipulates the symlink directly and works
+        # both offline and on a live system, matching how the LED units are
+        # enabled by dh_installsystemd below.
+        if [ -x /usr/bin/deb-systemd-helper ]; then
+            deb-systemd-helper enable gpio@24.service >/dev/null || true
+        fi
+
         if [ -d /run/systemd/system ] && [ -x /bin/systemctl ]; then
             systemctl daemon-reload || true
 
@@ -11,11 +28,12 @@ case "$1" in
                 systemctl start cm5-provisioner-led.service >/dev/null 2>&1 || true
             fi
 
+            # Enablement is handled above (offline-safe); only start here, which
+            # is meaningful on a live system and a no-op in a build chroot.
             if systemctl cat gpio@.service >/dev/null 2>&1; then
-                systemctl enable gpio@24.service >/dev/null 2>&1 || true
                 systemctl start gpio@24.service >/dev/null 2>&1 || true
             else
-                echo "gpio@.service template not found; skipping gpio@24 activation." >&2
+                echo "gpio@.service template not found; skipping gpio@24 start." >&2
                 echo "Install rpi-systemd-gpio and then run: systemctl enable --now gpio@24.service" >&2
             fi
 
