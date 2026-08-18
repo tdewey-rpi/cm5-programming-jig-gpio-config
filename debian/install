@@ -28,4 +28,6 @@ hooks/idp-provisioner-provision-started.sh      etc/rpi-sb-provisioner/scripts
 hooks/idp-provisioner-post-flash.sh             etc/rpi-sb-provisioner/scripts
 hooks/idp-provisioner-provision-failed.sh       etc/rpi-sb-provisioner/scripts
 
+usb-ports.d/50-cm5-jig.conf                     usr/share/rpi-sb-provisioner/usb-ports.d
+
 LICENSE                                         usr/share/doc/cm5-programming-jig-gpio-config

@@ -18,7 +18,7 @@ Depends: ${misc:Depends},
          ${shlibs:Depends},
          systemd,
          rpi-systemd-gpio (>= 1.1.1),
-         rpi-sb-provisioner (>= 2.3.1),
+         rpi-sb-provisioner (>= 2.3.2),
          gpiod (>= 2.0),
          libgpiod3 (>= 2.0)
 Description: CM5 Programming Jig GPIO Configuration
