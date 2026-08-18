@@ -1,3 +1,29 @@
+cm5-programming-jig-gpio-config (1.0.3) unstable; urgency=medium
+
+  * Ship a USB port filter to
+    /usr/share/rpi-sb-provisioner/usb-ports.d/50-cm5-jig.conf, restricting
+    provisioning to 4-1 -- the port the jig head is wired to -- so a board
+    attached anywhere else on the host is left alone rather than programmed.
+    A board on any other port is skipped, not failed: the provisioner logs
+    the reason and records a PORT-EXCLUDED state, and the provisioning hooks
+    that drive the status LEDs do not run, so the head stays on its ready
+    indication.
+  * The port was measured on a PVT jig, where 4-1 is a root port of the
+    second xHCI controller wired directly to the head with no intervening
+    hub, and is the only endpoint the provisioner has ever recorded a board
+    on. Note this makes the package active on install: if 4-1 is wrong for a
+    given jig, provisioning stops until it is corrected.
+  * Document the filter in the README: how to confirm the port against your
+    own hardware, and how to correct or disable it through
+    /etc/rpi-sb-provisioner/usb-ports.d/50-cm5-jig.conf. Corrections belong
+    in that /etc copy rather than in the shipped file, since files under
+    /usr/share are replaced wholesale on upgrade while a same-named file in
+    /etc both survives and takes precedence; an empty one disables the rule.
+  * Depend on rpi-sb-provisioner (>= 2.3.2), the first version that reads the
+    usb-ports.d drop-in directories.
+
+ -- Tom Dewey <tom.dewey@raspberrypi.com>  Tue, 18 Aug 2026 13:00:05 +0100
+
 cm5-programming-jig-gpio-config (1.0.2) unstable; urgency=medium
 
   * postinst: Enable gpio@24.service with deb-systemd-helper instead of
