@@ -1,3 +1,21 @@
+cm5-programming-jig-gpio-config (1.0.4) unstable; urgency=medium
+
+  * Light the failure LED for permanent misconfiguration during bootstrap.
+    The provision-failed hooks suppressed every bootstrap-phase failure,
+    because most are the expected USB re-enumeration as the device reboots
+    and lighting red for those would flash a failure on every successful
+    run. That filter was too broad: no signing key configured, or no OS
+    image selected, also report during bootstrap and will never resolve on
+    retry, so the head sat on blue in-progress indefinitely with nothing to
+    tell the operator anything was wrong.
+  * Distinguish the two through PROVISION_FAILED_PERMANENT, which
+    rpi-sb-provisioner sets from 2.3.2. Only the genuinely transient case is
+    still swallowed. Against an older provisioner the variable is unset and
+    the hooks behave exactly as before, so the change is safe to install
+    ahead of the provisioner it pairs with.
+
+ -- Tom Dewey <tom.dewey@raspberrypi.com>  Tue, 18 Aug 2026 15:14:13 +0100
+
 cm5-programming-jig-gpio-config (1.0.3) unstable; urgency=medium
 
   * Ship a USB port filter to

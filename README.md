@@ -26,7 +26,9 @@ Assumes you connect the following test points to the host CM5:
 | Ready | Green solid | `rpi-provisioner-ui` active (`cm5-provisioner-led-ready.service`) |
 | In progress | Blue blink (2 Hz) | Bootstrap hook (USB device detected) through flash complete |
 | Success | Green solid | `post-flash` hook; returns to green ready on lever release |
-| Failure | Red blink (2 Hz) | `provision-failed` hook (provisioning phase only); returns to green ready on lever release |
+| Failure | Red blink (2 Hz) | `provision-failed` hook, on any provisioning-phase failure and on permanent misconfiguration during bootstrap; returns to green ready on lever release |
+
+Bootstrap-phase failures are filtered, because most of them are the expected USB re-enumeration as the device reboots and lighting red for those would flash a failure on every successful run. Permanent misconfiguration is not filtered: no signing key, or no OS image selected, will never resolve on retry, so it lights red rather than leaving the head on blue in-progress with nothing to tell the operator. This relies on `PROVISION_FAILED_PERMANENT`, which `rpi-sb-provisioner` sets from 2.3.2; against older versions the hooks behave exactly as before.
 
 Hooks are installed for `sb-`, `fde-`, `naked-`, and `idp-provisioner`.
 
