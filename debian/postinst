@@ -5,19 +5,24 @@ case "$1" in
     configure)
         # Enable the gpio@24 trigger instance in an offline-safe way.
         #
-        # gpio@24 is a template instance of gpio@.service, which is shipped by
-        # our hard dependency rpi-systemd-gpio (so the template is present on
-        # disk by the time this runs). dh_installsystemd cannot manage a template
-        # instance, so we enable it ourselves -- but via deb-systemd-helper, NOT
-        # `systemctl enable`. This package is also configured in an offline build
-        # chroot (e.g. rpi-image-gen) where systemd is not running: there,
-        # `systemctl enable` silently no-ops, so the wants symlink is never baked
-        # into the image and a freshly flashed unit never starts gpio@24 on first
-        # boot. deb-systemd-helper manipulates the symlink directly and works
-        # both offline and on a live system, matching how the LED units are
-        # enabled by dh_installsystemd below.
-        if [ -x /usr/bin/deb-systemd-helper ]; then
-            deb-systemd-helper enable gpio@24.service >/dev/null || true
+        # gpio@24 is a template instance of gpio@.service, shipped by our hard
+        # dependency rpi-systemd-gpio. dh_installsystemd cannot manage a
+        # template instance, so we enable it ourselves.
+        #
+        # `systemctl --root=/` rather than deb-systemd-helper. The helper
+        # cannot handle template instances: it resolves a unit by looking for
+        # a file of that literal name, and no gpio@24.service exists -- only
+        # gpio@.service -- so it fails with "unable to read gpio@24.service".
+        # It happened to leave the symlink behind anyway, because internally it
+        # shells out to `systemctl preset` first and only fails afterwards on
+        # its own bookkeeping, but it recorded no state -- which meant postrm
+        # could never clean the symlink up again.
+        #
+        # --root makes this a pure file operation needing no running systemd,
+        # so it works both on a live jig and in the offline build chroot
+        # (e.g. rpi-image-gen), which is what this needs to survive.
+        if command -v systemctl >/dev/null 2>&1; then
+            systemctl --root=/ enable gpio@24.service >/dev/null 2>&1 || true
         fi
 
         if [ -d /run/systemd/system ] && [ -x /bin/systemctl ]; then

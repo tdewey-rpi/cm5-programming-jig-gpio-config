@@ -1,3 +1,23 @@
+cm5-programming-jig-gpio-config (1.0.5) unstable; urgency=medium
+
+  * Stop using deb-systemd-helper for the gpio@24 template instance. The
+    helper resolves a unit by looking for a file of that literal name, and
+    only gpio@.service exists, so every install and upgrade printed
+    "error: unable to read gpio@24.service". Enablement appeared to work
+    regardless -- internally the helper shells out to `systemctl preset`,
+    which does understand template instances, and only fails afterwards on
+    its own bookkeeping -- but no state was recorded, so postrm's disable
+    and purge had nothing to act on and the wants symlink survived package
+    removal.
+  * Enable and disable with `systemctl --root=/` instead, which handles
+    template instances and is a pure file operation needing no running
+    systemd, so it works both on a live jig and in the offline build chroot
+    that 1.0.2 set out to support. Remove the symlink directly in postrm as
+    well, as a backstop for instances enabled by the older postinst, which
+    left no state behind for anything to find.
+
+ -- Tom Dewey <tom.dewey@raspberrypi.com>  Tue, 18 Aug 2026 16:58:49 +0100
+
 cm5-programming-jig-gpio-config (1.0.4) unstable; urgency=medium
 
   * Light the failure LED for permanent misconfiguration during bootstrap.
