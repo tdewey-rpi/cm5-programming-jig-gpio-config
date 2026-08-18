@@ -1,17 +1,21 @@
 #!/bin/sh
 set -e
 
-# Mirror the enablement we perform for the gpio@24 template instance in
+# Mirror the enablement performed for the gpio@24 template instance in
 # postinst. dh_installsystemd only cleans up the LED units it manages (via the
-# ##DEBHELPER## expansion below), so we disable/purge gpio@24 ourselves to avoid
-# leaving a dangling wants symlink and deb-systemd-helper state behind.
-if [ -x /usr/bin/deb-systemd-helper ]; then
-    if [ "$1" = "remove" ]; then
-        deb-systemd-helper disable gpio@24.service >/dev/null || true
+# ##DEBHELPER## expansion below), so gpio@24 is ours to undo.
+#
+# This previously called deb-systemd-helper, which cannot resolve a template
+# instance and so recorded no state when enabling -- meaning disable and purge
+# had nothing to act on and the wants symlink survived removal. Use the same
+# offline-safe systemctl call the postinst now uses, and remove the symlink
+# directly as a backstop for units enabled by the older postinst, which left
+# no helper state behind for anything to find.
+if [ "$1" = "remove" ] || [ "$1" = "purge" ]; then
+    if command -v systemctl >/dev/null 2>&1; then
+        systemctl --root=/ disable gpio@24.service >/dev/null 2>&1 || true
     fi
-    if [ "$1" = "purge" ]; then
-        deb-systemd-helper purge gpio@24.service >/dev/null || true
-    fi
+    rm -f /etc/systemd/system/multi-user.target.wants/gpio@24.service
 fi
 
 ##DEBHELPER##
