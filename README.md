@@ -40,6 +40,7 @@ Hooks are installed for `sb-`, `fde-`, `naked-`, and `idp-provisioner`.
 - **systemd units** (`cm5-provisioner-led.service`, `cm5-provisioner-led-ready.service`) -- LED daemon and solid green ready indicator once the provisioner stack is up.
 - **rpi-sb-provisioner hooks** (`/etc/rpi-sb-provisioner/scripts/`) -- integrates with `rpi-sb-provisioner` so that status LEDs and RPIBOOT are driven automatically during provisioning.
 - **USB port filter** (`/usr/share/rpi-sb-provisioner/usb-ports.d/50-cm5-jig.conf`) -- restricts provisioning to the jig head's USB port (`4-1`). See [USB port filter](#usb-port-filter) below.
+- **UART capture** (`cm5-programming-jig-uart.service`, `/usr/share/rpi-sb-provisioner/uart.d/50-cm5-jig.conf`) -- turns GPIO 14/15 into `/dev/ttyAMA0` and maps it to the head, so the provisioner keeps what each board prints on its console. See [UART capture](#uart-capture) below.
 
 ## USB port filter
 
@@ -104,6 +105,32 @@ by the provisioning hooks, which do not run for a skipped device, so the head
 stays on its ready indication.
 
 Requires `rpi-sb-provisioner` 2.3.2 or later.
+
+## UART capture
+
+GPIO 14 and 15 of the host are wired to the console UART of the board in the
+head, and every stage of a CM5's provisioning prints there: the bootloader,
+the firmware, the kernel of the fastboot gadget, and fastbootd's errors. On a
+PVT jig a board printed its bootloader version, its `MFG_VER`, and the
+transport errors fastbootd hit when the host went away.
+
+`cm5-programming-jig-uart.service` loads the `uart0-pi5` overlay at boot,
+which makes those pins `/dev/ttyAMA0`. It is skipped when `/dev/ttyAMA0`
+already exists, for example because `config.txt` loads the overlay, and the
+overlay goes when the package is removed. The jig's own console stays on the
+debug UART (`serial0`, `ttyAMA10`), so nothing on the host answers the board.
+
+`/usr/share/rpi-sb-provisioner/uart.d/50-cm5-jig.conf` maps the head's port,
+`4-1`, to `/dev/ttyAMA0` at 115200 baud. With `rpi-sb-provisioner` 2.4.0 or
+later, `rpi-sb-uart-capture` then keeps:
+
+- `/var/log/rpi-sb-provisioner/uart/4-1.log`, everything from the head;
+- `/var/log/rpi-sb-provisioner/<serial>/uart.log`, each board's part of it,
+  shown as the UART log on the board's device page.
+
+Older provisioners ignore the mapping. To turn capture off, put an empty
+`/etc/rpi-sb-provisioner/uart.d/50-cm5-jig.conf` in place and run
+`sudo systemctl restart rpi-sb-uart-capture`.
 
 ## Building
 

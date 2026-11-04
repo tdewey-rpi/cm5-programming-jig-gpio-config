@@ -23,3 +23,4 @@ override_dh_auto_clean:
 override_dh_installsystemd:
 	dh_installsystemd --name=cm5-provisioner-led --no-start
 	dh_installsystemd --name=cm5-provisioner-led-ready --no-start
+	dh_installsystemd --name=cm5-programming-jig-uart --no-start

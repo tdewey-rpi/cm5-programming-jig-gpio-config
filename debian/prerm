@@ -1,0 +1,12 @@
+#!/bin/sh
+set -e
+
+# dh_installsystemd stops nothing for a unit installed with --no-start, so
+# unload the UART overlay here rather than at the next reboot.
+if [ "$1" = "remove" ] && [ -d /run/systemd/system ]; then
+    systemctl stop cm5-programming-jig-uart.service >/dev/null 2>&1 || true
+fi
+
+#DEBHELPER#
+
+exit 0
