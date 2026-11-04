@@ -1,0 +1,15 @@
+[Unit]
+Description=CM5 programming jig: UART on GPIO 14 and 15 for the head's console
+Documentation=man:cm5-programming-jig-gpio-config(1)
+Before=rpi-sb-uart-capture.service
+# Already there when config.txt loads the overlay, or something else does.
+ConditionPathExists=!/dev/ttyAMA0
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/dtoverlay uart0-pi5
+ExecStop=/usr/bin/dtoverlay -r uart0-pi5
+
+[Install]
+WantedBy=multi-user.target

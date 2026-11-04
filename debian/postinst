@@ -42,6 +42,16 @@ case "$1" in
                 echo "Install rpi-systemd-gpio and then run: systemctl enable --now gpio@24.service" >&2
             fi
 
+            # The UART for the head's console, then the capture that reads it,
+            # which reads uart.d only when it starts.
+            if systemctl cat cm5-programming-jig-uart.service >/dev/null 2>&1; then
+                systemctl enable cm5-programming-jig-uart.service >/dev/null 2>&1 || true
+                systemctl start cm5-programming-jig-uart.service >/dev/null 2>&1 || true
+            fi
+            if systemctl cat rpi-sb-uart-capture.service >/dev/null 2>&1; then
+                systemctl restart rpi-sb-uart-capture.service >/dev/null 2>&1 || true
+            fi
+
             if systemctl cat cm5-provisioner-led-ready.service >/dev/null 2>&1; then
                 systemctl enable cm5-provisioner-led-ready.service >/dev/null 2>&1 || true
                 systemctl start cm5-provisioner-led-ready.service >/dev/null 2>&1 || true

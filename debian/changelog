@@ -1,3 +1,14 @@
+cm5-programming-jig-gpio-config (1.0.6) unstable; urgency=medium
+
+  * Capture the head's serial console. GPIO 14 and 15 are wired to the
+    board's UART; a new unit loads uart0-pi5 at boot to make them
+    /dev/ttyAMA0, and uart.d/50-cm5-jig.conf maps port 4-1 to it, so
+    rpi-sb-provisioner 2.4.0 keeps each board's bootloader, kernel and
+    fastbootd output in its uart.log. Depends on raspi-utils-dt for
+    dtoverlay.
+
+ -- Tom Dewey <tom.dewey@raspberrypi.com>  Wed, 04 Nov 2026 14:59:05 +0000
+
 cm5-programming-jig-gpio-config (1.0.5) unstable; urgency=medium
 
   * Stop using deb-systemd-helper for the gpio@24 template instance. The

@@ -18,6 +18,11 @@ if [ "$1" = "remove" ] || [ "$1" = "purge" ]; then
     rm -f /etc/systemd/system/multi-user.target.wants/gpio@24.service
 fi
 
+# Our uart.d mapping is gone, so the capture must let go of the UART.
+if [ "$1" = "remove" ] && [ -d /run/systemd/system ]; then
+    systemctl try-restart rpi-sb-uart-capture.service >/dev/null 2>&1 || true
+fi
+
 ##DEBHELPER##
 
 exit 0

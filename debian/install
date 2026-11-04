@@ -11,6 +11,7 @@ effectors/disable_5v                            usr/bin
 
 systemd/cm5-provisioner-led.service             lib/systemd/system
 systemd/cm5-provisioner-led-ready.service       lib/systemd/system
+systemd/cm5-programming-jig-uart.service        lib/systemd/system
 
 hooks/sb-provisioner-bootstrap.sh               etc/rpi-sb-provisioner/scripts
 hooks/sb-provisioner-provision-started.sh       etc/rpi-sb-provisioner/scripts
@@ -29,5 +30,6 @@ hooks/idp-provisioner-post-flash.sh             etc/rpi-sb-provisioner/scripts
 hooks/idp-provisioner-provision-failed.sh       etc/rpi-sb-provisioner/scripts
 
 usb-ports.d/50-cm5-jig.conf                     usr/share/rpi-sb-provisioner/usb-ports.d
+uart.d/50-cm5-jig.conf                          usr/share/rpi-sb-provisioner/uart.d
 
 LICENSE                                         usr/share/doc/cm5-programming-jig-gpio-config
